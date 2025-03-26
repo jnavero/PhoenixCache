@@ -1,0 +1,17 @@
+{
+    "port": ":8080",
+    "num_counters": 10000000,
+    "max_cost": 1073741824,
+    "buffer_items": 64,
+    "read_timeout": 5,
+    "write_timeout": 5,
+    "max_conns_per_ip": 1000,
+    "max_requests_per_conn": 10,
+    "peers": [
+        "http://localhost:8080",
+        "http://localhost:8081"
+      ],  
+    "max_retries_to_disabled_node": 3,
+    "heart_beat_interval_in_seconds": 5,
+    "white_list_file_path": "whitelist.json"
+}

@@ -1,0 +1,5 @@
+{
+    "allowed_nodes": [
+        "localhost:8080"
+]
+}
