@@ -50,7 +50,6 @@ curl --location 'http://localhost:8080/get?key=myKey'
 "This is my cached value"
 ```
 
-
 ## 3. `/trygetwithexpire` – Retrieve a value with expiration time
 
 ### Description:
@@ -115,25 +114,43 @@ curl --location 'http://localhost:8080/getKeys' --header 'Content-Type: applicat
 ## 5. `/list` – Retrieve all keys with truncated values and expiration times
 
 ### Description:
-The `/list` endpoint returns all keys currently stored in the cache along with their values (truncated to 25 characters) and expiration times.
+The `/list` endpoint returns all keys currently stored in the cache along with their values (truncated to 25 characters by default) and expiration times. If the optional `allValue` parameter is provided and set to `true`, the full values will be returned instead of truncated ones.
 
 ### Request:
 - **Method**: `GET`
+- **Query Parameters**:
+  - `allValue` (optional, boolean) – If set to `true`, returns full values instead of truncated ones.
 
 ### Example `cURL` Request:
 ```bash
 curl --location 'http://localhost:8080/list'
 ```
 
+To retrieve full values:
+```bash
+curl --location 'http://localhost:8080/list?allValue=true'
+```
+
 ### Expected Response:
 *200 OK* – Returns a JSON array of all keys stored in the cache.
 
-### Example Response:
+### Example Response (truncated values by default):
 ```json
 [
     {
         "key": "myKey",
-        "value": "This is my cached value",
+        "value": "This is my cached value...",
+        "expires_in": "4m58.0297621s"
+    }
+]
+```
+
+### Example Response (full values with `allValue=true`):
+```json
+[
+    {
+        "key": "myKey",
+        "value": "This is my full cached value with all content visible.",
         "expires_in": "4m58.0297621s"
     }
 ]

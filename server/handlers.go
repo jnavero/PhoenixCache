@@ -67,7 +67,18 @@ func HandleGet(cache *internal.Cache, ctx *fasthttp.RequestCtx) {
 
 // handleList devuelve un listado de la caché
 func HandleList(cache *internal.Cache, ctx *fasthttp.RequestCtx) {
-	items := cache.List()
+
+	value := string(ctx.QueryArgs().Peek("allValue"))
+	hasItem := ctx.QueryArgs().Has("allValue")
+	val := true
+
+	if hasItem {
+		if value == "" || value == "true" {
+			val = false
+		}
+	}
+
+	items := cache.GetAll(val)
 	jsonResponse, _ := json.Marshal(items)
 	ctx.SetContentType("application/json")
 	ctx.SetBody(jsonResponse)
@@ -176,8 +187,10 @@ func HandleGetKeys(cache *internal.Cache, ctx *fasthttp.RequestCtx) {
 	defer internal.CacheMutex.Unlock()
 
 	for _, key := range keys {
-		val, found := cache.Get(key)
 		val, expTime, found := cache.GetWithExpiry(key)
+		if expTime == nil {
+			continue
+		}
 		timeLeft := expTime.(time.Time)
 		if found {
 			response[key] = struct {
